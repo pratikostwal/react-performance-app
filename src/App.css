@@ -1,0 +1,54 @@
+.userlist-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userlist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.userlist-table-header {
+  background-color: #f1f1f1;
+}
+
+.userlist-table-header-row {
+  height: 50px;
+}
+
+.userlist-header-cell {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  padding: 8px;
+}
+
+.userlist-body-row:hover {
+  background-color: #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.userlist-body-cell {
+  padding: 12px;
+  font-size: 14px;
+  color: #555;
+  border-bottom: 1px solid #ddd;
+}
+
+.userlist-no-records {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #999;
+}
+
+.userlist-row {
+  display: flex;
+  align-items: center;
+}
+
+.userlist-virtual-list {
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
