@@ -3,8 +3,11 @@ import Home from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {
+  // Use basename only in production
+  const basename = process.env.NODE_ENV === "production" ? "/react-performance-app" : "";
+
   return (
-    <Router basename="/react-performance-app">
+    <Router basename={basename}>
       <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
