@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import debounce from "lodash/debounce";
 import { FixedSizeList as List } from "react-window";
 import {
@@ -11,14 +11,15 @@ import {
   TableBody,
 } from "@mui/material";
 
-const UserList = ({ searchTerm, sortField }) => {
+const UserList = ({ searchTerm, sortField, setDataStatus }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const hasFetchedRef = useRef(false);
 
-  // Debounced function to fetch data
   const fetchData = useCallback(
     debounce(async () => {
+      if (hasFetchedRef.current) return;
       setLoading(true);
       try {
         const response = await fetch("https://randomuser.me/api/?results=1000");
@@ -32,35 +33,33 @@ const UserList = ({ searchTerm, sortField }) => {
           email: user.email,
         }));
         setItems(formattedData);
+        setDataStatus(formattedData.length > 0);
+        hasFetchedRef.current = true;
       } catch (err) {
         setError(err.message);
+        setDataStatus(false);
       } finally {
         setLoading(false);
       }
-    }, 500), // Debounce time of 500ms
-    []
+    }, 1000),
+    [setDataStatus]
   );
 
   useEffect(() => {
-    fetchData(); // Call the debounced function
-    // Cleanup function to cancel debounce on unmount
-    return () => {
-      fetchData.cancel();
-    };
-  }, [fetchData]); // Empty dependency array to ensure it runs once
+    fetchData();
+    return () => fetchData.cancel();
+  }, [fetchData]);
 
-  // Filter items based on the search term
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sort items based on the selected sort field
   if (sortField) {
-    filteredItems.sort((a, b) => {
-      return sortField === "name"
+    filteredItems.sort((a, b) =>
+      sortField === "name"
         ? a.name.localeCompare(b.name)
-        : a.email.localeCompare(b.email);
-    });
+        : a.email.localeCompare(b.email)
+    );
   }
 
   return (
